@@ -1,0 +1,39 @@
+{
+  "builds": [
+    {
+      "name": "vmware-iso",
+      "builder_type": "vmware-iso",
+      "build_time": 1604868133,
+      "files": [
+        {
+          "name": "centos-7.8-x86_64.nvram",
+          "size": 8684
+        },
+        {
+          "name": "centos-7.8-x86_64.vmsd",
+          "size": 0
+        },
+        {
+          "name": "centos-7.8-x86_64.vmx",
+          "size": 3153
+        },
+        {
+          "name": "centos-7.8-x86_64.vmxf",
+          "size": 272
+        },
+        {
+          "name": "disk-flat.vmdk",
+          "size": 68719476736
+        },
+        {
+          "name": "disk.vmdk",
+          "size": 534
+        }
+      ],
+      "artifact_id": "centos-7.8-x86_64",
+      "packer_run_uuid": "d63d1124-5b22-a864-d3dc-99cf2b011e46",
+      "custom_data": null
+    }
+  ],
+  "last_run_uuid": "d63d1124-5b22-a864-d3dc-99cf2b011e46"
+}

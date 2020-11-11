@@ -28,7 +28,7 @@
     },
     {
       "boot_command": [
-        "<up><wait><tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{user `ks_path`}}<enter><wait>"
+        "<up><wait><tab> text ks=https://gist.githubusercontent.com/antoinethebuilder/506afe947362977370af67d4f01833ba/raw/96e4ca29ed7d34597222de825fbfd9895cf38d3c/ks.cfg<enter><wait>"
       ],
       "boot_wait": "10s",
       "cpus": "{{ user `cpus` }}",
@@ -41,6 +41,7 @@
       "memory": "{{ user `memory` }}",
       "output_directory": "{{ user `build_directory` }}/packer-{{user `template`}}-vmware",
       "shutdown_command": "echo 'vagrant' | sudo -S /sbin/halt -h -p",
+      "communicator":"ssh",
       "ssh_password": "vagrant",
       "ssh_port": 22,
       "ssh_timeout": "10000s",
@@ -48,10 +49,18 @@
       "tools_upload_flavor": "linux",
       "type": "vmware-iso",
       "vm_name": "{{ user `template` }}",
+      "disk_type_id": "4",
       "vmx_data": {
-        "cpuid.coresPerSocket": "1"
+        "cpuid.coresPerSocket": "1",
+        "virtualHW.version": "12",
+        "ethernet0.virtualDev": "vmxnet3",
+        "ethernet0.present": "TRUE",
+        "ethernet0.connectionType":"custom",
+        "ethernet0.vnet":"vmnet8"
       },
-      "vmx_remove_ethernet_interfaces": true
+      "vmx_remove_ethernet_interfaces": true,
+      "display_name": "Siemplify Agent Appliance",
+      "format": "ova"
     },
     {
       "boot_command": [
@@ -126,7 +135,17 @@
   ],
   "post-processors": [
     {
-      "output": "{{ user `build_directory` }}/{{user `box_basename`}}.{{.Provider}}.box",
+      "type": "manifest",
+      "output": "{{ user `build_directory` }}/manifest_{{ user `box_basename` }}_{{ build_type }}.json",
+      "strip_path": true
+    },
+    {
+      "type": "checksum",
+      "checksum_types": ["sha1", "sha256"],
+      "output": "{{ user `build_directory` }}/{{ user `box_basename` }}_{{ build_type }}_{{.ChecksumType}}.checksum"
+    },
+    {
+      "output": "{{ user `build_directory` }}/{{ user `box_basename` }}_{{.BuildName}}_{{.Provider}}.box",
       "type": "vagrant"
     }
   ],
@@ -168,7 +187,7 @@
     "http_proxy": "{{env `http_proxy`}}",
     "https_proxy": "{{env `https_proxy`}}",
     "hyperv_generation": "1",
-    "hyperv_switch": "{{env `hyperv_switch`}}",
+    "hyperv_switch": "Default Switch",
     "iso_checksum": "659691c28a0e672558b003d223f83938f254b39875ee7559d1a4a14c79173193",
     "iso_name": "CentOS-7-x86_64-Minimal-2003.iso",
     "ks_path": "7/ks.cfg",
